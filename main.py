@@ -33,7 +33,7 @@ def replace_nan_to_avarege(dataset):
 
     #замінити від'ємні значення в колонці column_name на їх абсолютні значення
 def abs_date(dataset, column_name):
-    dataset[column_name] = dataset[column_name].abs()
+     dataset[column_name] = dataset[column_name].abs()
 
 
     #Виправити помилки в даних (типиб заміна пустих і відємних значень)
@@ -52,6 +52,26 @@ def correction_error_in_date(dataset):
     return dataset
 
 
+def boxplot(dataset):
+    footer,\
+    diagrams = plt.subplots(1, 4, figsize=(12, 6))
+
+    footer.suptitle('Діаграми розмаху: ', fontsize=20)
+
+    diagrams[0].set_title('GDP per capita')
+    diagrams[0].boxplot(dataset['GDP per capita'])
+
+    diagrams[1].set_title('Populatiion')
+    diagrams[1].boxplot(dataset['Populatiion'])
+
+    diagrams[2].set_title('CO2 emission')
+    diagrams[2].boxplot(dataset['CO2 emission'])
+
+    diagrams[3].set_title('Area')
+    diagrams[3].boxplot(dataset['Area'])
+
+    plt.show()
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
@@ -61,3 +81,6 @@ if __name__ == '__main__':
 
     print_dataset(dataset)
     print(dataset.info())
+
+    boxplot(dataset)
+
