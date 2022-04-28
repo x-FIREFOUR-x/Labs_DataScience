@@ -12,23 +12,27 @@ def read_dataset(path):
     return data
 
 
-def print_first_five_rows(dataset):
+def print_dataset(dataset):
    print(dataset)
 
+def convert_column_str_to_float(dataset, column_name):
+    dataset[column_name] = dataset[column_name]\
+        .str.replace(',', '.')\
+        .astype(float)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
 
-    print_first_five_rows(dataset)
+    print_dataset(dataset)
 
     print(dataset.info())
 
-    dataset['GDP per capita'] = dataset['GDP per capita'].str.replace(',', '.').astype(float)
-    dataset['CO2 emission'] = dataset['CO2 emission'].str.replace(',', '.').astype(float)
-    dataset['Area'] = dataset['Area'].str.replace(',', '.').astype(float)
+    convert_column_str_to_float(dataset, 'GDP per capita')
+    convert_column_str_to_float(dataset, 'CO2 emission')
+    convert_column_str_to_float(dataset, 'Area')
 
     print(dataset.info())
 
-    print_first_five_rows(dataset)
+    print_dataset(dataset)
