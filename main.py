@@ -20,19 +20,20 @@ def convert_column_str_to_float(dataset, column_name):
         .str.replace(',', '.')\
         .astype(float)
 
+def replace_nan_to_avarege(dataset):
+    return dataset.fillna(dataset.mean())
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
-
-    print_dataset(dataset)
-
-    print(dataset.info())
 
     convert_column_str_to_float(dataset, 'GDP per capita')
     convert_column_str_to_float(dataset, 'CO2 emission')
     convert_column_str_to_float(dataset, 'Area')
 
     print(dataset.info())
+
+    dataset = replace_nan_to_avarege(dataset)
 
     print_dataset(dataset)
