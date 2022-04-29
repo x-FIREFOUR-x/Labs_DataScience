@@ -98,10 +98,11 @@ if __name__ == '__main__':
     abs_date(dataset, 'GDP per capita')
     abs_date(dataset, 'Area')
 
-    print_first_n_dataset(dataset, 217)
-    print(dataset.info())
-
     boxplot(dataset)
 
     hist(dataset)
 
+    dataset['Density population'] = dataset['Populatiion'] / dataset['Area']
+
+    print_first_n_dataset(dataset, 217)
+    print(dataset.info())
