@@ -128,8 +128,8 @@ def regions_coincide_average_median_gdp(dataset):
     regions_average_gdp = dataset.groupby(['Region']).mean()['GDP per capita']
     regions_mediana_gdp = dataset.groupby(['Region']).median()['GDP per capita']
     regins_coincide = pd.merge(regions_average_gdp, regions_mediana_gdp, how='inner')
-    #print(regions_average_gdp)
-    #print(regions_mediana_gdp)
+    print('\nAverage gdp in region: ', regions_average_gdp)
+    print('\nMedian gdp in region: ', regions_mediana_gdp)
     print('\nRegions when coincide average and median gdp: \n', regins_coincide)
 
 
