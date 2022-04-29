@@ -155,7 +155,6 @@ def top_lost_5_country_co2(dataset):
 
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
