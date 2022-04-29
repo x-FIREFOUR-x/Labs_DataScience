@@ -92,7 +92,7 @@ def country_max_gdp(dataset):
     id_row_max_gdp = dataset['GDP per capita'].idxmax()
     row_dataset_max_gdp = dataset.loc[id_row_max_gdp]
     name_country_max_gdp = row_dataset_max_gdp['Country Name']
-    print('Country with a max GDP per capita:', name_country_max_gdp)
+    print('\nCountry with a max GDP per capita:', name_country_max_gdp)
     print('Index row in dataset with a max GDP per capita:', id_row_max_gdp)
 
 
@@ -101,14 +101,14 @@ def country_min_area(dataset):
     id_row_min_area = dataset['Area'].idxmin()
     row_dataset_min_area = dataset.loc[id_row_min_area]
     name_country_min_area = row_dataset_min_area['Country Name']
-    print('Country with a min Area:', name_country_min_area)
+    print('\nCountry with a min Area:', name_country_min_area)
     print('Index row in dataset with a min Area:', id_row_min_area)
 
 
     #регіон з найбільшою середньою площею країн
 def region_average_area(dataset):
     average_area_regions = dataset.groupby(['Region']).mean()['Area']
-    print('Average areas countries by regions:\n', average_area_regions)
+    #print('\nAverage areas countries by regions:\n', average_area_regions)
     print('Region with max average areas countries by regions: ', average_area_regions.idxmax())
 
 
@@ -116,7 +116,7 @@ def region_average_area(dataset):
 def country_max_population(dataset):
     id_row_max_population = dataset['Populatiion'].idxmax()
     row_max_population = dataset.loc[id_row_max_population]
-    print('Country with a max Population:', row_max_population['Country Name'])
+    print('\nCountry with a max Population:', row_max_population['Country Name'])
     print('Index row in dataset with a max Population:', id_row_max_population)
 
 
@@ -124,8 +124,18 @@ def country_max_population(dataset):
 def country_max_populatuin_in_europe(dataset):
     id_row_max_population_in_europe = dataset[dataset['Region'] == 'Europe & Central Asia']['Populatiion'].idxmax()
     row_max_population_in_europe = dataset.loc[id_row_max_population_in_europe]
-    print('Country with a max Population in Europe:', row_max_population_in_europe['Country Name'])
+    print('\nCountry with a max Population in Europe:', row_max_population_in_europe['Country Name'])
     print('Index row in dataset with a max Population in Europe:', id_row_max_population_in_europe)
+
+    #регіони де співпадає середнє з медіаною ВВП
+def regions_coincide_average_median_gdp(dataset):
+    regions_average_gdp = dataset.groupby(['Region']).mean()['GDP per capita']
+    regions_mediana_gdp = dataset.groupby(['Region']).median()['GDP per capita']
+    regins_coincide = pd.merge(regions_average_gdp, regions_mediana_gdp, how='inner')
+    #print(regions_average_gdp)
+    #print(regions_mediana_gdp)
+    print('\nRegions when coincide average and median gdp: \n', regins_coincide)
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -161,6 +171,8 @@ if __name__ == '__main__':
     country_max_population(dataset)
 
     country_max_populatuin_in_europe(dataset)
+
+    regions_coincide_average_median_gdp(dataset)
 
 
 
