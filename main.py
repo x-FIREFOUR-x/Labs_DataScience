@@ -112,6 +112,20 @@ def region_average_area(dataset):
     print('Region with max average areas countries by regions: ', average_area_regions.idxmax())
 
 
+    #країна з найбільшим населенням
+def country_max_population(dataset):
+    id_row_max_population = dataset['Populatiion'].idxmax()
+    row_max_population = dataset.loc[id_row_max_population]
+    print('Country with a max Population:', row_max_population['Country Name'])
+    print('Index row in dataset with a max Population:', id_row_max_population)
+
+
+    #країна з найбільшим населенням в Європі
+def country_max_populatuin_in_europe(dataset):
+    id_row_max_population_in_europe = dataset[dataset['Region'] == 'Europe & Central Asia']['Populatiion'].idxmax()
+    row_max_population_in_europe = dataset.loc[id_row_max_population_in_europe]
+    print('Country with a max Population in Europe:', row_max_population_in_europe['Country Name'])
+    print('Index row in dataset with a max Population in Europe:', id_row_max_population_in_europe)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -143,5 +157,10 @@ if __name__ == '__main__':
     country_min_area(dataset)
 
     region_average_area(dataset)
+
+    country_max_population(dataset)
+
+    country_max_populatuin_in_europe(dataset)
+
 
 
