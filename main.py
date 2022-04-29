@@ -8,15 +8,10 @@ desired_width = 320
 pd.set_option('display.width', desired_width)
 
 
-    #зчитати дасет в датафрейм
+    #зчитати датасет в датафрейм
 def read_dataset(path):
     data = pd.read_csv(path, sep=';', encoding='cp1252')
     return data
-
-
-    #вивести датасет
-def print_first_n_dataset(dataset, n):
-   print(dataset.head(n))
 
 
     #конвертувати тип даних колонки column_name датафрейма з string в float
@@ -182,7 +177,7 @@ if __name__ == '__main__':
 
     dataset['Density population'] = dataset['Populatiion'] / dataset['Area']
 
-    #print_first_n_dataset(dataset, 217)
+    #print(dataset.head(217))
     #print(dataset.info())
 
     country_max_gdp(dataset)
@@ -200,6 +195,7 @@ if __name__ == '__main__':
     top_lost_5_country_gdp(dataset)
 
     top_lost_5_country_co2(dataset)
+
 
 
 
