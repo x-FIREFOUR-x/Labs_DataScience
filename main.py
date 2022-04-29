@@ -61,7 +61,7 @@ def boxplot(dataset):
     diagrams[0].set_title('GDP per capita')
     diagrams[0].boxplot(dataset['GDP per capita'])
 
-    diagrams[1].set_title('Populatiion')
+    diagrams[1].set_title('Population')
     diagrams[1].boxplot(dataset['Populatiion'])
 
     diagrams[2].set_title('CO2 emission')
@@ -71,6 +71,26 @@ def boxplot(dataset):
     diagrams[3].boxplot(dataset['Area'])
 
     plt.show()
+
+def hist(dataset):
+    footer, hists = plt.subplots(1, 4, figsize=(16, 6))
+
+    footer.suptitle('Гістограми: ', fontsize=20)
+
+    hists[0].set_title('GDP per capita')
+    hists[0].hist(dataset['GDP per capita'])
+
+    hists[1].set_title('Population')
+    hists[1].hist(dataset['Populatiion'])
+
+    hists[2].set_title('CO2 emission')
+    hists[2].hist(dataset['CO2 emission'])
+
+    hists[3].set_title('Area')
+    hists[3].hist(dataset['Area'])
+
+    plt.show()
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -83,4 +103,6 @@ if __name__ == '__main__':
     print(dataset.info())
 
     boxplot(dataset)
+
+    hist(dataset)
 
