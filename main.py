@@ -15,8 +15,8 @@ def read_dataset(path):
 
 
     #вивести датасет
-def print_dataset(dataset):
-   print(dataset)
+def print_first_n_dataset(dataset, n):
+   print(dataset.head(n))
 
 
     #конвертувати тип даних колонки column_name датафрейма з string в float
@@ -30,26 +30,16 @@ def convert_column_str_to_float(dataset, column_name):
 def replace_nan_to_avarege(dataset):
     return dataset.fillna(dataset.mean())
 
+def print_neg_elements_dataset(dataset):
+    print('GDP per capita negative values:\n', dataset[dataset['GDP per capita'] < 0])
+    print('\nPopulation negative values:\n', dataset[dataset['Populatiion'] < 0])
+    print('\nCO2 emission negative values:\n', dataset[dataset['CO2 emission'] < 0])
+    print('\nArea negative values:\n', dataset[dataset['Area'] < 0])
 
     #замінити від'ємні значення в колонці column_name на їх абсолютні значення
 def abs_date(dataset, column_name):
      dataset[column_name] = dataset[column_name].abs()
 
-
-    #Виправити помилки в даних (типиб заміна пустих і відємних значень)
-def correction_error_in_date(dataset):
-    convert_column_str_to_float(dataset, 'GDP per capita')
-    convert_column_str_to_float(dataset, 'CO2 emission')
-    convert_column_str_to_float(dataset, 'Area')
-
-    dataset = replace_nan_to_avarege(dataset)
-
-    abs_date(dataset, 'GDP per capita')
-    abs_date(dataset, 'Populatiion')
-    abs_date(dataset, 'CO2 emission')
-    abs_date(dataset, 'Area')
-
-    return dataset
 
 
 def boxplot(dataset):
@@ -73,7 +63,7 @@ def boxplot(dataset):
     plt.show()
 
 def hist(dataset):
-    footer, hists = plt.subplots(1, 4, figsize=(16, 6))
+    footer, hists = plt.subplots(1, 4, figsize=(14, 6))
 
     footer.suptitle('Гістограми: ', fontsize=20)
 
@@ -97,9 +87,18 @@ if __name__ == '__main__':
     data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
 
-    dataset = correction_error_in_date(dataset)
+    convert_column_str_to_float(dataset, 'GDP per capita')
+    convert_column_str_to_float(dataset, 'CO2 emission')
+    convert_column_str_to_float(dataset, 'Area')
 
-    print_dataset(dataset)
+    dataset = replace_nan_to_avarege(dataset)
+
+    #print_neg_elements_dataset(dataset)
+
+    abs_date(dataset, 'GDP per capita')
+    abs_date(dataset, 'Area')
+
+    print_first_n_dataset(dataset, 217)
     print(dataset.info())
 
     boxplot(dataset)
