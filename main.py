@@ -127,6 +127,7 @@ def country_max_populatuin_in_europe(dataset):
     print('\nCountry with a max Population in Europe:', row_max_population_in_europe['Country Name'])
     print('Index row in dataset with a max Population in Europe:', id_row_max_population_in_europe)
 
+
     #регіони де співпадає середнє з медіаною ВВП
 def regions_coincide_average_median_gdp(dataset):
     regions_average_gdp = dataset.groupby(['Region']).mean()['GDP per capita']
@@ -135,6 +136,28 @@ def regions_coincide_average_median_gdp(dataset):
     #print(regions_average_gdp)
     #print(regions_mediana_gdp)
     print('\nRegions when coincide average and median gdp: \n', regins_coincide)
+
+
+    #перші 5 і останні 5 країн за ввп
+def top_lost_5_country_gdp(dataset):
+    print('\nTop 5 country by GDP per capita:')
+    print(dataset.sort_values(by=['GDP per capita'], ascending=False).head(5))
+
+    print('\nLast 5 country by GDP per capita:')
+    print(dataset.sort_values(by=['GDP per capita']).head(5))
+
+
+    # перші 5 і останні 5 країн за викидами CO2 на душу населення
+def top_lost_5_country_co2(dataset):
+    dataset['CO2 per capita'] = dataset['CO2 emission'] / dataset['Populatiion']
+
+    print('\nTop 5 country by CO2 per capita:')
+    print(dataset.sort_values(by=['CO2 per capita'], ascending=False).head(5))
+
+    print('\nLast 5 country by CO2 per capita:')
+    print(dataset.sort_values(by=['CO2 per capita']).head(5))
+
+
 
 
 # Press the green button in the gutter to run the script.
@@ -173,6 +196,11 @@ if __name__ == '__main__':
     country_max_populatuin_in_europe(dataset)
 
     regions_coincide_average_median_gdp(dataset)
+
+    top_lost_5_country_gdp(dataset)
+
+    top_lost_5_country_co2(dataset)
+
 
 
 
