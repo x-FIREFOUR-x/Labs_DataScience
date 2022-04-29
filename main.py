@@ -106,3 +106,17 @@ if __name__ == '__main__':
 
     print_first_n_dataset(dataset, 217)
     print(dataset.info())
+
+        #країна з найбільшим ввп на людину (GDP per capita)
+    id_row_max_gdp = dataset['GDP per capita'].idxmax()
+    row_dataset_max_gdp = dataset.loc[id_row_max_gdp]
+    name_country_max_gdp = row_dataset_max_gdp['Country Name']
+    print('Country with a max GDP per capita:', name_country_max_gdp)
+    print('Index row in dataset with a max GDP per capita:', id_row_max_gdp)
+
+        #країна з найменшою площею (Area)
+    id_row_min_area = dataset['Area'].idxmin()
+    row_dataset_min_area = dataset.loc[id_row_min_area]
+    name_country_min_area = row_dataset_min_area['Country Name']
+    print('Country with a min Area:', name_country_min_area)
+    print('Index row in dataset with a min Area:', id_row_min_area)
