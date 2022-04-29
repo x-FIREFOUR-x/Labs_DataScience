@@ -30,18 +30,21 @@ def convert_column_str_to_float(dataset, column_name):
 def replace_nan_to_avarege(dataset):
     return dataset.fillna(dataset.mean())
 
+
+    #вивести негативні елементи колонок
 def print_neg_elements_dataset(dataset):
     print('GDP per capita negative values:\n', dataset[dataset['GDP per capita'] < 0])
     print('\nPopulation negative values:\n', dataset[dataset['Populatiion'] < 0])
     print('\nCO2 emission negative values:\n', dataset[dataset['CO2 emission'] < 0])
     print('\nArea negative values:\n', dataset[dataset['Area'] < 0])
 
+
     #замінити від'ємні значення в колонці column_name на їх абсолютні значення
 def abs_date(dataset, column_name):
      dataset[column_name] = dataset[column_name].abs()
 
 
-
+    #побудувати діаграми розмаху
 def boxplot(dataset):
     footer,\
     diagrams = plt.subplots(1, 4, figsize=(12, 6))
@@ -62,6 +65,8 @@ def boxplot(dataset):
 
     plt.show()
 
+
+    #побудувати гістограми
 def hist(dataset):
     footer, hists = plt.subplots(1, 4, figsize=(14, 6))
 
@@ -80,6 +85,32 @@ def hist(dataset):
     hists[3].hist(dataset['Area'])
 
     plt.show()
+
+
+    #країна з найбільшим ввп на людину (GDP per capita)
+def country_max_gdp(dataset):
+    id_row_max_gdp = dataset['GDP per capita'].idxmax()
+    row_dataset_max_gdp = dataset.loc[id_row_max_gdp]
+    name_country_max_gdp = row_dataset_max_gdp['Country Name']
+    print('Country with a max GDP per capita:', name_country_max_gdp)
+    print('Index row in dataset with a max GDP per capita:', id_row_max_gdp)
+
+
+    #країна з найменшою площею (Area)
+def country_min_area(dataset):
+    id_row_min_area = dataset['Area'].idxmin()
+    row_dataset_min_area = dataset.loc[id_row_min_area]
+    name_country_min_area = row_dataset_min_area['Country Name']
+    print('Country with a min Area:', name_country_min_area)
+    print('Index row in dataset with a min Area:', id_row_min_area)
+
+
+    #регіон з найбільшою середньою площею країн
+def region_average_area(dataset):
+    average_area_regions = dataset.groupby(['Region']).mean()['Area']
+    print('Average areas countries by regions:\n', average_area_regions)
+    print('Region with max average areas countries by regions: ', average_area_regions.idxmax())
+
 
 
 # Press the green button in the gutter to run the script.
@@ -104,19 +135,13 @@ if __name__ == '__main__':
 
     dataset['Density population'] = dataset['Populatiion'] / dataset['Area']
 
-    print_first_n_dataset(dataset, 217)
-    print(dataset.info())
+    #print_first_n_dataset(dataset, 217)
+    #print(dataset.info())
 
-        #країна з найбільшим ввп на людину (GDP per capita)
-    id_row_max_gdp = dataset['GDP per capita'].idxmax()
-    row_dataset_max_gdp = dataset.loc[id_row_max_gdp]
-    name_country_max_gdp = row_dataset_max_gdp['Country Name']
-    print('Country with a max GDP per capita:', name_country_max_gdp)
-    print('Index row in dataset with a max GDP per capita:', id_row_max_gdp)
+    country_max_gdp(dataset)
 
-        #країна з найменшою площею (Area)
-    id_row_min_area = dataset['Area'].idxmin()
-    row_dataset_min_area = dataset.loc[id_row_min_area]
-    name_country_min_area = row_dataset_min_area['Country Name']
-    print('Country with a min Area:', name_country_min_area)
-    print('Index row in dataset with a min Area:', id_row_min_area)
+    country_min_area(dataset)
+
+    region_average_area(dataset)
+
+
