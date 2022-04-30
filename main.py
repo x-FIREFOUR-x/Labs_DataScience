@@ -57,9 +57,10 @@ def hist(dataset):
 
     plt.show()
 
-    #Перевірка нормальності розподілу за тестом Шапіро
+    #Перевірка нормальності розподілу за тестом Шапіро-Уілка
 def test_normality(data, alpha = 0.05):
     statistic, pvalue = stats.shapiro(data)
+    print('Statistic=%.4f, pvalue=%.4f' % (statistic, pvalue))
     if pvalue > alpha:
         print('Дані відповідають нормальному розподілу')
     else:
