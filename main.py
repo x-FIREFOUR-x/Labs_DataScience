@@ -99,6 +99,17 @@ def test_normality_CO2_regions(dataset):
             print(str(mes))
 
 
+    #Кругова діаграма населення по регіонам
+def circle_diagram_popul(dataset):
+    regions = pd.unique(dataset['Region'])
+
+    title, diagrams = plt.subplots(figsize=(8, 6))
+    diagrams.pie(dataset.groupby('Region').sum()['Populatiion'],
+                 labels=regions, autopct='%.3f%%')
+    title.suptitle('Населення по регіонам:', fontsize=20)
+
+    plt.show()
+
 
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
@@ -143,7 +154,10 @@ if __name__ == '__main__':
 
 
         #4 визначення в якому регіоні розподіл викидів СО2 найбільш близький до нормального
-    dataset['CO2 emission'].hist(by=dataset['Region'], figsize=(20, 20))
+    dataset['CO2 emission'].hist(by=dataset['Region'], figsize=(15, 20))
     plt.show()
 
     test_normality_CO2_regions(dataset)
+
+
+    circle_diagram_popul(dataset)
