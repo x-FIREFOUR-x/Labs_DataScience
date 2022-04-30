@@ -57,6 +57,15 @@ def hist(dataset):
 
     plt.show()
 
+    #Перевірка нормальності розподілу за тестом Шапіро
+def test_normality(data, alpha = 0.05):
+    statistic, pvalue = stats.shapiro(data)
+    if pvalue > alpha:
+        print('Дані відповідають нормальному розподілу')
+    else:
+        print('Дані не відповідають нормальному розподілу')
+
+
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
@@ -79,3 +88,8 @@ if __name__ == '__main__':
 
     dataset.hist(figsize=(12,10))
     plt.show()
+
+    test_normality(dataset['GDP per capita'])
+    test_normality(dataset['Populatiion'])
+    test_normality(dataset['CO2 emission'])
+    test_normality(dataset['Area'])
