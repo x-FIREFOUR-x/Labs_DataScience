@@ -100,7 +100,7 @@ def test_normality_CO2_regions(dataset):
 
 
     #Кругова діаграма населення по регіонам
-def circle_diagram_popul(dataset):
+def circle_diagram_popul_in_regions(dataset):
     regions = pd.unique(dataset['Region'])
 
     title, diagrams = plt.subplots(figsize=(8, 6))
@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
 
         #2 перевірити чи параметри розподілені за нормальним законом
-    dataset.hist(figsize=(12,10))
+    dataset.hist(figsize=(12, 10))
     plt.show()
 
     print('\nперевірка для GDP per capita:')
@@ -160,4 +160,5 @@ if __name__ == '__main__':
     test_normality_CO2_regions(dataset)
 
 
-    circle_diagram_popul(dataset)
+        #5 кругова діаграма населення по регіонах
+    circle_diagram_popul_in_regions(dataset)
