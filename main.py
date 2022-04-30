@@ -39,6 +39,7 @@ def print_neg_elements_dataset(dataset):
 def abs_date(dataset, column_name):
      dataset[column_name] = dataset[column_name].abs()
 
+
 def hist(dataset):
     footer, hists = plt.subplots(1, 4, figsize=(14, 6))
     footer.suptitle('Гістограми: ', fontsize=20)
@@ -57,14 +58,46 @@ def hist(dataset):
 
     plt.show()
 
+
     #Перевірка нормальності розподілу за тестом Шапіро-Уілка
-def test_normality(data, alpha = 0.05):
+def test_normality_shapiro(data, alpha = 0.05):
     statistic, pvalue = stats.shapiro(data)
-    print('Statistic=%.4f, pvalue=%.4f' % (statistic, pvalue))
+    print('Шапіро-Уілка', 'Statistic=%.4f, pvalue=%.4f' % (statistic, pvalue))
     if pvalue > alpha:
         print('Дані відповідають нормальному розподілу')
     else:
         print('Дані не відповідають нормальному розподілу')
+
+
+    # Перевірка нормальності розподілу за тестом Д'Агостіно-Пірсона
+def test_normality(data, alpha=0.05):
+    statistic, pvalue = stats.normaltest(data)
+    print('Агостіно-Пірсона', 'Statistic=%.4f, pvalue=%.4f' % (statistic, pvalue))
+    if pvalue > alpha:
+        print('Дані відповідають нормальному розподілу')
+    else:
+        print('Дані не відповідають нормальному розподілу')
+
+
+    #Перевірка нормальності розподілу CO2 emission по регіонам
+def test_normality_CO2_regions(dataset):
+    regions = pd.unique(dataset['Region'])
+
+    for region in regions:
+        #print(region)
+        #print(dataset[dataset['Region'] == region]['CO2 emission'])
+        print('\nПеревірка для регіону:', region)
+        emissions_in_region = dataset[dataset['Region'] == region]['CO2 emission']
+        try:
+            test_normality_shapiro(emissions_in_region)
+        except ValueError as mes:
+            print(str(mes))
+
+        try:
+            test_normality(emissions_in_region)
+        except ValueError as mes:
+            print(str(mes))
+
 
 
 if __name__ == '__main__':
@@ -77,7 +110,7 @@ if __name__ == '__main__':
 
     dataset = replace_nan_to_avarege(dataset)
 
-    # print_neg_elements_dataset(dataset)
+    #print_neg_elements_dataset(dataset)
 
     abs_date(dataset, 'GDP per capita')
     abs_date(dataset, 'Area')
@@ -87,10 +120,30 @@ if __name__ == '__main__':
 
     dataset.describe()
 
+
+        #2 перевірити чи параметри розподілені за нормальним законом
     dataset.hist(figsize=(12,10))
     plt.show()
 
+    print('\nперевірка для GDP per capita:')
     test_normality(dataset['GDP per capita'])
+    test_normality_shapiro(dataset['GDP per capita'])
+
+    print('\nперевірка для Populatiion:')
     test_normality(dataset['Populatiion'])
+    test_normality_shapiro(dataset['Populatiion'])
+
+    print('\nперевірка для CO2 emission:')
     test_normality(dataset['CO2 emission'])
+    test_normality_shapiro(dataset['CO2 emission'])
+
+    print('\nперевірка для Area:')
     test_normality(dataset['Area'])
+    test_normality_shapiro(dataset['Area'])
+
+
+        #4 визначення в якому регіоні розподіл викидів СО2 найбільш близький до нормального
+    dataset['CO2 emission'].hist(by=dataset['Region'], figsize=(20, 20))
+    plt.show()
+
+    test_normality_CO2_regions(dataset)
