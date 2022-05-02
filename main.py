@@ -14,8 +14,8 @@ pd.set_option('display.width', desired_width)
 
 
     #зчитати датасет в датафрейм
-def read_dataset(path):
-    data = pd.read_csv(path, sep=';', encoding='cp1252')
+def read_dataset(path, dec='.'):
+    data = pd.read_csv(path, sep=';', decimal=dec, encoding='cp1252')
     return data
 
 
@@ -197,6 +197,7 @@ if __name__ == '__main__':
         #5 кругова діаграма населення по регіонах
     circle_diagram_popul_in_regions(dataset)
 
+
     #Додаткове 1
 
     cities_name = ['Київ', 'Львів', 'Луцьк', 'Чернівці', 'Тернопіль']
@@ -210,6 +211,12 @@ if __name__ == '__main__':
 
     max_distance(cities_name, cities_coordinates, img_map)
 
+
+    #Додаткове 3
+
+    shape = geopd.read_file('data/UKR_ADM1.shp')
+    dataset_ukr_dpp = read_dataset('data/ukr_DPP.csv', ',')
+    dataset_ukr_gdp = read_dataset('data/ukr_GDP.csv', ',')
 
 
 
