@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 import geopandas as geopd
 import numpy as np
+from scipy.spatial import distance
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -114,11 +115,7 @@ def circle_diagram_popul_in_regions(dataset):
     plt.show()
 
     #Відобразити карту України з бульбашками що відповідають населенню
-def create_map(cities_name, cities_coordinates, cities_population):
-    IMG_PATH = 'data/Maps/Ukraine.jpg'
-
-    img_map = mpimg.imread(IMG_PATH)
-
+def create_map(img_map, cities_coordinates, cities_population):
     footer, map = plt.subplots(figsize=(8, 6))
     footer.suptitle('Україна: ', fontsize=20)
 
@@ -133,6 +130,20 @@ def create_map(cities_name, cities_coordinates, cities_population):
     )
     map.axis('off')
     plt.show()
+
+
+def max_distance(cities_name, cities_coordinates, img_map):
+    distances = distance.cdist(cities_coordinates, cities_coordinates, 'euclidean')
+
+    city1, city2 = np.unravel_index(distances.argmax(), distances.shape)
+
+    distance_pixel = distances[city1, city2]
+
+    width_ukr_km = 1316
+    distance_km = distances[city1, city2] * (width_ukr_km / img_map.shape[1])
+
+    print(f'\nМіж містами {cities_name[city1]} і {cities_name[city2]} '
+          f'найбільша відстань: {distance_pixel:.3f} пікселів або {distance_km:.3f} км')
 
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
@@ -188,13 +199,17 @@ if __name__ == '__main__':
 
     #Додаткове 1
 
-        #1, 2 побудувати карту розмістити на містах бульбашки
     cities_name = ['Київ', 'Львів', 'Луцьк', 'Чернівці', 'Тернопіль']
     cities_coordinates = np.array([(386, 145), (90, 188), (156, 118), (175, 294), (162, 202)])
     cities_population = np.array([2.884, 0.721, 0.213, 0.285, 0.216])
 
-    create_map(cities_name, cities_coordinates, cities_population)
-    print(dataset.head(200))
+    IMG_PATH = 'data/Maps/Ukraine.jpg'
+    img_map = mpimg.imread(IMG_PATH)
+
+    create_map(img_map, cities_coordinates, cities_population)
+
+    max_distance(cities_name, cities_coordinates, img_map)
+
 
 
 
