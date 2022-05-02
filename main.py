@@ -132,6 +132,7 @@ def create_map(img_map, cities_coordinates, cities_population):
     plt.show()
 
 
+    #Визначення між якими 2 містами з заданого списку найбільша відстань на карті
 def max_distance(cities_name, cities_coordinates, img_map):
     distances = distance.cdist(cities_coordinates, cities_coordinates, 'euclidean')
 
@@ -144,6 +145,15 @@ def max_distance(cities_name, cities_coordinates, img_map):
 
     print(f'\nМіж містами {cities_name[city1]} і {cities_name[city2]} '
           f'найбільша відстань: {distance_pixel:.3f} пікселів або {distance_km:.3f} км')
+
+
+    #Створити картограму по данатим колонки(column) геодатасету(geodataset) з назвою(title)
+def create_cartography(geodataset, column, title='Картограма'):
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+    geodataset.plot(column=column, ax=ax, legend=True)
+    fig.suptitle(title)
+    ax.axis('off')
+    plt.show()
 
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
@@ -214,10 +224,13 @@ if __name__ == '__main__':
 
     #Додаткове 3
 
-    shape = geopd.read_file('data/UKR_ADM1.shp')
-    dataset_ukr_dpp = read_dataset('data/ukr_DPP.csv', ',')
-    dataset_ukr_gdp = read_dataset('data/ukr_GDP.csv', ',')
+    geom = geopd.read_file('data/UKR_ADM1.shp')
 
+    dataset_ukr_dpp = pd.read_csv('data/ukr_DPP.csv', sep=';', decimal=',', encoding='windows-1251', header=1)
+    dataset_ukr_gdp = pd.read_csv('data/ukr_GDP.csv', sep=';', decimal=',', encoding='windows-1251', header=1)
 
+    geodataset_dpp = geopd.GeoDataFrame(pd.merge(geom, dataset_ukr_dpp))
+    geodataset_gdp = geopd.GeoDataFrame(pd.merge(geom, dataset_ukr_gdp))
 
-
+    create_cartography(geodataset_dpp, '2016', "Прибуток населення на одну особу (2016 рік)")
+    create_cartography(geodataset_gdp, '2016', "Валовий регіональний продукт (2016 рік)")
