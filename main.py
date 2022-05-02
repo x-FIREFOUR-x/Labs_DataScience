@@ -1,6 +1,9 @@
+import matplotlib.image as mpimg
 import pandas as pd
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+import geopandas as geopd
+import numpy as np
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -110,6 +113,26 @@ def circle_diagram_popul_in_regions(dataset):
 
     plt.show()
 
+    #Відобразити карту України з бульбашками що відповідають населенню
+def create_map(cities_name, cities_coordinates, cities_population):
+    IMG_PATH = 'data/Maps/Ukraine.jpg'
+
+    img_map = mpimg.imread(IMG_PATH)
+
+    footer, map = plt.subplots(figsize=(8, 6))
+    footer.suptitle('Україна: ', fontsize=20)
+
+    map.imshow(img_map)
+    map.scatter(
+        cities_coordinates[:, 0],
+        cities_coordinates[:, 1],
+        s=cities_population * 1000,
+        c='red',
+        alpha=0.3,
+        linewidth=2
+    )
+    map.axis('off')
+    plt.show()
 
 if __name__ == '__main__':
     data_path = 'data\Data2.csv'
@@ -162,3 +185,17 @@ if __name__ == '__main__':
 
         #5 кругова діаграма населення по регіонах
     circle_diagram_popul_in_regions(dataset)
+
+    #Додаткове 1
+
+        #1, 2 побудувати карту розмістити на містах бульбашки
+    cities_name = ['Київ', 'Львів', 'Луцьк', 'Чернівці', 'Тернопіль']
+    cities_coordinates = np.array([(386, 145), (90, 188), (156, 118), (175, 294), (162, 202)])
+    cities_population = np.array([2.884, 0.721, 0.213, 0.285, 0.216])
+
+    create_map(cities_name, cities_coordinates, cities_population)
+    print(dataset.head(200))
+
+
+
+
