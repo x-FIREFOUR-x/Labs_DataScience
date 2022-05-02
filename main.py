@@ -103,7 +103,7 @@ def country_min_area(dataset):
     #регіон з найбільшою середньою площею країн
 def region_average_area(dataset):
     average_area_regions = dataset.groupby(['Region']).mean()['Area']
-    #print('\nAverage areas countries by regions:\n', average_area_regions)
+    print('\nAverage areas countries by regions:\n', average_area_regions)
     print('Region with max average areas countries by regions: ', average_area_regions.idxmax())
 
 
@@ -159,13 +159,18 @@ if __name__ == '__main__':
     data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
 
+    print(dataset.info())
+    print(dataset.head(5))
+
     convert_column_str_to_float(dataset, 'GDP per capita')
     convert_column_str_to_float(dataset, 'CO2 emission')
     convert_column_str_to_float(dataset, 'Area')
 
+    print(dataset.info())
+
     dataset = replace_nan_to_avarege(dataset)
 
-    #print_neg_elements_dataset(dataset)
+    print_neg_elements_dataset(dataset)
 
     abs_date(dataset, 'GDP per capita')
     abs_date(dataset, 'Area')
@@ -176,8 +181,6 @@ if __name__ == '__main__':
 
     dataset['Density population'] = dataset['Populatiion'] / dataset['Area']
 
-    #print(dataset.head(217))
-    #print(dataset.info())
 
     country_max_gdp(dataset)
 
