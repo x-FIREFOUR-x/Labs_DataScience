@@ -5,6 +5,7 @@ import scipy.stats as stats
 import geopandas as geopd
 import numpy as np
 from scipy.spatial import distance
+import math
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -102,6 +103,20 @@ def test_normality_CO2_regions(dataset):
         except ValueError as mes:
             print(str(mes))
 
+def check_median(dataset, column, alpha = 0.05):
+    N = len(dataset[column])
+    G = dataset[column].std()
+    df = N - 1
+    Mz = dataset[column].median()
+    A = dataset[column].mean()
+
+    t = abs(Mz - A) / (G / math.sqrt(N))
+    test_t = stats.t.sf(t, df)
+    if test_t > alpha / 2:
+        print(column, ': Гіпотеза підтверджується')
+    else:
+        print(column, ': Гіпотеза відхиляється')
+
 
     #Кругова діаграма населення по регіонам
 def circle_diagram_popul_in_regions(dataset):
@@ -157,7 +172,7 @@ def create_cartography(geodataset, column, title='Картограма'):
                         "edgecolor": "red",
                         "label": "Missing values",
                     },
-                    cmap='viridis', edgecolor='black', linewidth=0.2)
+                    cmap='gnuplot', edgecolor='white', linewidth=0.2)
     fig.suptitle(title)
     ax.axis('off')
     plt.show()
@@ -218,6 +233,14 @@ if __name__ == '__main__':
     print('\nперевірка для Area:')
     test_normality(dataset['Area'])
     test_normality_shapiro(dataset['Area'])
+
+
+        #3 Перевірка середніх та медіан на значимість
+    print('\n')
+    check_median(dataset, 'GDP per capita')
+    check_median(dataset, 'Populatiion')
+    check_median(dataset, 'CO2 emission')
+    check_median(dataset, 'Area')
 
 
         #4 визначення в якому регіоні розподіл викидів СО2 найбільш близький до нормального
