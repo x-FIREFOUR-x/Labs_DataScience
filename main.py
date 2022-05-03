@@ -147,7 +147,7 @@ def max_distance(cities_name, cities_coordinates, img_map):
           f'найбільша відстань: {distance_pixel:.3f} пікселів або {distance_km:.3f} км')
 
 
-    #Створити картограму по данатим колонки(column) геодатасету(geodataset) з назвою(title)
+    #Створити картограму по даним колонки(column) геодатасету(geodataset) з назвою(title)
 def create_cartography(geodataset, column, title='Картограма'):
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
     geodataset.plot(column=column, ax=ax, legend=True)
@@ -155,8 +155,27 @@ def create_cartography(geodataset, column, title='Картограма'):
     ax.axis('off')
     plt.show()
 
+
+    #Розрахувати коефіцієнт кореляції
+def correlation_coefficient(dataset_dpp, dataset_gdp, geom):
+    dpp_series = dataset_dpp.iloc[:, -5:]
+    gdp_series = dataset_gdp.iloc[:, -5:]
+
+    corr = pd.DataFrame()
+    corr['Correlation'] = dpp_series.corrwith(gdp_series, axis=1)
+    corr['Name'] = dataset_dpp['Name']
+
+    correlations = pd.merge(geom, corr, on=['Name'])
+
+    create_cartography(correlations, 'Correlation', "Коефіцієнт кореляції")
+
+
+
+
+
+
 if __name__ == '__main__':
-    data_path = 'data\Data2.csv'
+    '''data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
 
     convert_column_str_to_float(dataset, 'GDP per capita')
@@ -220,7 +239,7 @@ if __name__ == '__main__':
     create_map(img_map, cities_coordinates, cities_population)
 
     max_distance(cities_name, cities_coordinates, img_map)
-
+    '''
 
     #Додаткове 3
 
@@ -232,5 +251,10 @@ if __name__ == '__main__':
     geodataset_dpp = geopd.GeoDataFrame(pd.merge(geom, dataset_ukr_dpp))
     geodataset_gdp = geopd.GeoDataFrame(pd.merge(geom, dataset_ukr_gdp))
 
+    geodataset_gdp['2012'] = geodataset_gdp['2012'].astype(float)
+    geodataset_gdp['2013'] = geodataset_gdp['2013'].astype(float)
+
     create_cartography(geodataset_dpp, '2016', "Прибуток населення на одну особу (2016 рік)")
     create_cartography(geodataset_gdp, '2016', "Валовий регіональний продукт (2016 рік)")
+
+    correlation_coefficient(dataset_ukr_dpp, dataset_ukr_gdp, geom)
