@@ -150,7 +150,14 @@ def max_distance(cities_name, cities_coordinates, img_map):
     #Створити картограму по даним колонки(column) геодатасету(geodataset) з назвою(title)
 def create_cartography(geodataset, column, title='Картограма'):
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-    geodataset.plot(column=column, ax=ax, legend=True)
+    geodataset.plot(column=column, ax=ax, legend=True,
+                    legend_kwds={'orientation': "horizontal"},
+                    missing_kwds={
+                        "color": "lightgrey",
+                        "edgecolor": "red",
+                        "label": "Missing values",
+                    },
+                    cmap='viridis', edgecolor='black', linewidth=0.2)
     fig.suptitle(title)
     ax.axis('off')
     plt.show()
@@ -158,24 +165,21 @@ def create_cartography(geodataset, column, title='Картограма'):
 
     #Розрахувати коефіцієнт кореляції
 def correlation_coefficient(dataset_dpp, dataset_gdp, geom):
-    dpp_series = dataset_dpp.iloc[:, -5:]
-    gdp_series = dataset_gdp.iloc[:, -5:]
+    dpp = dataset_dpp.iloc[:, -5:]
+    gdp = dataset_gdp.iloc[:, -5:]
 
-    corr = pd.DataFrame()
-    corr['Correlation'] = dpp_series.corrwith(gdp_series, axis=1)
-    corr['Name'] = dataset_dpp['Name']
+    correlations = pd.DataFrame()
+    correlations['Correlation'] = dpp.corrwith(gdp, axis=1)
+    correlations['Name'] = dataset_dpp['Name']
 
-    correlations = pd.merge(geom, corr, on=['Name'])
+    correlations = pd.merge(geom, correlations, on=['Name'])
 
     create_cartography(correlations, 'Correlation', "Коефіцієнт кореляції")
 
 
 
-
-
-
 if __name__ == '__main__':
-    '''data_path = 'data\Data2.csv'
+    data_path = 'data\Data2.csv'
     dataset = read_dataset(data_path)
 
     convert_column_str_to_float(dataset, 'GDP per capita')
@@ -239,7 +243,7 @@ if __name__ == '__main__':
     create_map(img_map, cities_coordinates, cities_population)
 
     max_distance(cities_name, cities_coordinates, img_map)
-    '''
+
 
     #Додаткове 3
 
