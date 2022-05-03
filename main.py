@@ -203,12 +203,12 @@ if __name__ == '__main__':
 
     dataset = replace_nan_to_avarege(dataset)
 
-    #print_neg_elements_dataset(dataset)
+    print_neg_elements_dataset(dataset)
 
     abs_date(dataset, 'GDP per capita')
     abs_date(dataset, 'Area')
 
-    #print(dataset.head(217))
+    print(dataset.head(10))
     print(dataset.info())
 
     dataset.describe()
@@ -256,12 +256,12 @@ if __name__ == '__main__':
 
     #Додаткове 1
 
+    IMG_PATH = 'data/Maps/Ukraine.jpg'
+    img_map = mpimg.imread(IMG_PATH)
+
     cities_name = ['Київ', 'Львів', 'Луцьк', 'Чернівці', 'Тернопіль']
     cities_coordinates = np.array([(386, 145), (90, 188), (156, 118), (175, 294), (162, 202)])
     cities_population = np.array([2.884, 0.721, 0.213, 0.285, 0.216])
-
-    IMG_PATH = 'data/Maps/Ukraine.jpg'
-    img_map = mpimg.imread(IMG_PATH)
 
     create_map(img_map, cities_coordinates, cities_population)
 
