@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e56a3e02-6f91-47ca-833b-bb38af43089d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/Lab4.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/Data2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/Maps/Ukraine.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/UKR_ADM1.shp/UKR_ADM1.cpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/UKR_ADM1.shp/UKR_ADM1.dbf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/UKR_ADM1.shp/UKR_ADM1.prj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/UKR_ADM1.shp/UKR_ADM1.shp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/UKR_ADM1.shp/UKR_ADM1.shx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/UKR_ADM1.shp/metadata.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/ukr_DPP.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/ukr_GDP.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main.py" beforeDir="false" />
-    </list>
+    <list default="true" id="e56a3e02-6f91-47ca-833b-bb38af43089d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
