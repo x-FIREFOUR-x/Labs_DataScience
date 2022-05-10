@@ -48,7 +48,7 @@ def delete_outliers(dataset, column_label):
 
 
 if __name__ == '__main__':
-
+    '''
     #main task
     data_path = 'data\winequality-red.csv'
     dataset = pd.read_csv(data_path, sep=',', encoding='cp1252')
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     plt.plot(degree, mse, color='red')
     plt.plot(degree, r2, color='blue')
     plt.show()
-
+    '''
 
     #additional task
     data_path2 = 'data\Data4.csv'
@@ -106,3 +106,9 @@ if __name__ == '__main__':
 
     print_neg_elements_dataset(dataset2)
     print_nan_elements_dataset(dataset2)
+
+    datasetcorr2 = dataset2.corr()
+    print(datasetcorr2)
+
+    pd.plotting.scatter_matrix(dataset2, figsize=(10, 10))
+    plt.show()
