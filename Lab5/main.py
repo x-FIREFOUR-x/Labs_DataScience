@@ -20,12 +20,14 @@ pd.set_option('display.width', desired_width)
 
 def print_neg_elements_dataset(dataset):
     for col_name in dataset.columns:
-        print(f'{col_name} neg values:\n', dataset[dataset[col_name] < 0])
+        if dataset[col_name].dtype != 'object':
+            print(f'{col_name} neg values:\n', dataset[dataset[col_name] < 0])
 
 
 def print_nan_elements_dataset(dataset):
     for col_name in dataset.columns:
-        print(f'{col_name} nan values:\n', dataset[dataset[col_name] < 0])
+        if dataset[col_name].dtype != 'object':
+            print(f'{col_name} nan values:\n', dataset[dataset[col_name] < 0])
 
 def is_Normal_ShpiroWilk(column, a = 0.05):
     if len(column) < 3:
@@ -92,3 +94,15 @@ if __name__ == '__main__':
     plt.plot(degree, mse, color='red')
     plt.plot(degree, r2, color='blue')
     plt.show()
+
+
+    #additional task
+    data_path2 = 'data\Data4.csv'
+    dataset2 = pd.read_csv(data_path2, sep=';', encoding='windows-1251', decimal=',')
+    dataset2.rename(columns={'Unnamed: 0': 'Country'})
+
+    print(dataset2.info())
+    print(dataset2.head(10))
+
+    print_neg_elements_dataset(dataset2)
+    print_nan_elements_dataset(dataset2)
