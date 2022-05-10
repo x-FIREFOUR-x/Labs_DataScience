@@ -141,3 +141,30 @@ if __name__ == '__main__':
     PRegresions[5].fit(dataset2[['Iec', 'Is']], Y)
     PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
     PRegresions[6].fit(dataset2[['Ie', 'Iec', 'Is']], Y)
+
+
+        #протестуєм моделі
+    dstest = pd.read_csv('data/Data4t.csv', encoding='windows-1251', sep=';', decimal=',')
+    dstest.rename(columns={'Unnamed: 0': 'Country'})
+
+    testPredicts = []
+
+    testPredicts.append(LRegresions[0].predict(dstest['Ie'].to_numpy().reshape(-1, 1)))
+    testPredicts.append(LRegresions[1].predict(dstest['Iec'].to_numpy().reshape(-1, 1)))
+    testPredicts.append(LRegresions[2].predict(dstest['Is'].to_numpy().reshape(-1, 1)))
+    testPredicts.append(LRegresions[3].predict(dstest[['Ie', 'Iec']]))
+    testPredicts.append(LRegresions[4].predict(dstest[['Ie', 'Is']]))
+    testPredicts.append(LRegresions[5].predict(dstest[['Iec', 'Is']]))
+    testPredicts.append(LRegresions[6].predict(dstest[['Ie', 'Iec', 'Is']]))
+
+    testPredicts.append(PRegresions[0].predict(dstest['Ie'].to_numpy().reshape(-1, 1)))
+    testPredicts.append(PRegresions[1].predict(dstest['Iec'].to_numpy().reshape(-1, 1)))
+    testPredicts.append(PRegresions[2].predict(dstest['Is'].to_numpy().reshape(-1, 1)))
+    testPredicts.append(PRegresions[3].predict(dstest[['Ie', 'Iec']]))
+    testPredicts.append(PRegresions[4].predict(dstest[['Ie', 'Is']]))
+    testPredicts.append(PRegresions[5].predict(dstest[['Iec', 'Is']]))
+    testPredicts.append(PRegresions[6].predict(dstest[['Ie', 'Iec', 'Is']]))
+
+    test_predictions = np.array(testPredicts)
+
+    print(np.sum((test_predictions - dstest['Cql'].to_numpy()) ** 2, axis=1).argmin())
