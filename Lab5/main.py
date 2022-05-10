@@ -1,6 +1,14 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import scipy.stats as stats
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.linear_model import LinearRegression
+
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -17,6 +25,12 @@ def print_nan_elements_dataset(dataset):
     for col_name in dataset.columns:
         print(f'{col_name} nan values:\n', dataset[dataset[col_name] < 0])
 
+def is_Normal_ShpiroWilk(column, a = 0.05):
+    if len(column) < 3:
+        return True
+    st, pvalue = stats.shapiro(column)
+    return pvalue > a
+
 
 def delete_emissions(dataset, column_label):
     Q1 = dataset[column_label].quantile(0.25)
@@ -26,6 +40,7 @@ def delete_emissions(dataset, column_label):
                                    (dataset[column_label] > (Q3 + 1.5 * IQR))]
                            .index)
     return dataset
+
 
 
 if __name__ == '__main__':
@@ -42,5 +57,14 @@ if __name__ == '__main__':
     datasetcorr = dataset.corr()
     print(datasetcorr)
 
-    for column in dataset:
+    for column in dataset.columns:
+        print(is_Normal_ShpiroWilk(dataset[column]))
+
+    for column in dataset.columns:
         dataset = delete_emissions(dataset, column)
+
+    X = dataset.iloc[:, :11].to_numpy()
+    Y = dataset['quality'].to_numpy()
+
+    X_train, X_test, Y_train, T_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+
