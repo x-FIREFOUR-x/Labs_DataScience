@@ -96,6 +96,7 @@ if __name__ == '__main__':
     plt.show()
     '''
 
+
     #additional task
     data_path2 = 'data\Data4.csv'
     dataset2 = pd.read_csv(data_path2, sep=';', encoding='windows-1251', decimal=',')
@@ -112,3 +113,31 @@ if __name__ == '__main__':
 
     pd.plotting.scatter_matrix(dataset2, figsize=(10, 10))
     plt.show()
+
+        # побудуємо регресійні моделі
+    Y = dataset2['Cql']
+
+    LRegresions = []
+    LRegresions.append(LinearRegression().fit(dataset2['Ie'].to_numpy().reshape(-1, 1), Y))
+    LRegresions.append(LinearRegression().fit(dataset2['Iec'].to_numpy().reshape(-1, 1), Y))
+    LRegresions.append(LinearRegression().fit(dataset2['Is'].to_numpy().reshape(-1, 1), Y))
+    LRegresions.append(LinearRegression().fit(dataset2[['Ie', 'Iec']], Y))
+    LRegresions.append(LinearRegression().fit(dataset2[['Ie', 'Is']], Y))
+    LRegresions.append(LinearRegression().fit(dataset2[['Iec', 'Is']], Y))
+    LRegresions.append(LinearRegression().fit(dataset2[['Ie', 'Iec', 'Is']], Y))
+
+    PRegresions = []
+    PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
+    PRegresions[0].fit(dataset2['Ie'].to_numpy().reshape(-1, 1), Y)
+    PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
+    PRegresions[1].fit(dataset2['Iec'].to_numpy().reshape(-1, 1), Y)
+    PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
+    PRegresions[2].fit(dataset2['Is'].to_numpy().reshape(-1, 1), Y)
+    PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
+    PRegresions[3].fit(dataset2[['Ie', 'Iec']], Y)
+    PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
+    PRegresions[4].fit(dataset2[['Ie', 'Is']], Y)
+    PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
+    PRegresions[5].fit(dataset2[['Iec', 'Is']], Y)
+    PRegresions.append(make_pipeline(PolynomialFeatures(degree=2), LinearRegression()))
+    PRegresions[6].fit(dataset2[['Ie', 'Iec', 'Is']], Y)
