@@ -83,8 +83,8 @@ if __name__ == '__main__':
         #Обрахуємо Середня квадратичну помилку(mse) коефіцієнт детермінації(r2)
     mse = []
     r2 = []
-    for r in Regresions:
-        pred = r.predict(Xtest)
+    for i in Regresions:
+        pred = i.predict(Xtest)
         mse.append(mean_squared_error(Ytest, pred))
         r2.append(r2_score(Ytest, pred))
 
