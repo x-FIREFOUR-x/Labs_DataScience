@@ -15,7 +15,7 @@ from sklearn.metrics import r2_score
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', None)
-desired_width = 250
+desired_width = 200
 pd.set_option('display.width', desired_width)
 
 def print_neg_elements_dataset(dataset):
@@ -48,7 +48,7 @@ def delete_outliers(dataset, column_label):
 
 
 if __name__ == '__main__':
-    '''
+
     #main task
     data_path = 'data\winequality-red.csv'
     dataset = pd.read_csv(data_path, sep=',', encoding='cp1252')
@@ -59,11 +59,11 @@ if __name__ == '__main__':
     print_neg_elements_dataset(dataset)
     print_nan_elements_dataset(dataset)
 
-    datasetcorr = dataset.corr()
-    print(datasetcorr)
-
     for column in dataset.columns:
         print(is_Normal_ShpiroWilk(dataset[column]))
+
+    datasetcorr = dataset.corr()
+    print(datasetcorr)
 
     for column in dataset.columns:
         dataset = delete_outliers(dataset, column)
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     plt.plot(degree, mse, color='red')
     plt.plot(degree, r2, color='blue')
     plt.show()
-    '''
+
 
 
     #additional task
@@ -166,5 +166,5 @@ if __name__ == '__main__':
     testPredicts.append(PRegresions[6].predict(dstest[['Ie', 'Iec', 'Is']]))
 
     test_predictions = np.array(testPredicts)
-
-    print(np.sum((test_predictions - dstest['Cql'].to_numpy()) ** 2, axis=1).argmin())
+    index = np.sum((test_predictions - dstest['Cql'].to_numpy()) ** 2, axis=1).argmin()
+    print('Index better regresion', index)
