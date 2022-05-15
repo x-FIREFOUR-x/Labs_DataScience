@@ -37,6 +37,8 @@ def stats_nan_data(data):
 
 
 if __name__ == '__main__':
+
+        #Основне завдання
     data_path = 'data\\titanic.csv'
     dataset = pd.read_csv(data_path, sep=',', encoding='cp1252', decimal='.')
 
@@ -73,3 +75,7 @@ if __name__ == '__main__':
     print(missing_data.head(10))
 
 
+    features = pd.concat([dataset_train, dataset_test]).reset_index(drop=True)
+    features = pd.get_dummies(features)
+    df_train = features.iloc[:dataset_train.shape[0], :]
+    df_test = features.iloc[dataset_train.shape[0]:, :]
