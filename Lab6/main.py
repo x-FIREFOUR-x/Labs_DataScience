@@ -12,6 +12,11 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import BaggingClassifier
 from sklearn.model_selection import cross_val_score
 
+from sklearn.cluster import KMeans
+import plotly.express as px
+from sklearn.metrics import silhouette_score
+from kneed import KneeLocator
+
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', None)
@@ -134,7 +139,65 @@ if __name__ == '__main__':
     dataset2 = dataset2.rename(columns={'Populatiion': 'Population'})
     dataset2['GDP per capita'] = abs(dataset2['GDP per capita'])
     dataset2['Area'] = abs(dataset2['Area'])
+    dataset2 = dataset2.fillna(dataset2.mean())
 
     dataset2['Population density'] = dataset2['Population'] / dataset2['Area']
 
     print(dataset2.info())
+
+    features = dataset2[['GDP per capita', 'Population density']]
+
+
+    kmeans_kwargs = {
+        'init': 'random',
+        'n_init': 10,
+        'max_iter': 300,
+        'random_state': 42
+    }
+    sse = []
+    max_cluster = 10
+    for k in range(1, max_cluster + 1):
+        kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
+        kmeans.fit(features)
+        sse.append(kmeans.inertia_)
+
+    plt.figure(figsize=(8, 8))
+    plt.plot(range(1, max_cluster + 1), sse)
+    plt.xticks(range(1, max_cluster + 1))
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('SSE')
+    plt.grid(linestyle='-')
+    plt.show()
+
+    knee = KneeLocator(range(1, max_cluster + 1), sse, curve='convex', direction='decreasing')
+    print(f'Точка локтя: {knee.elbow}')
+
+
+    kmeans = KMeans(
+        init='random',
+        n_clusters=4,
+        n_init=10,
+        max_iter=300,
+        random_state=42
+    )
+    kmeans.fit(features)
+
+        #візуалізуємо кластери:
+    fig = px.scatter(
+        dataset2, x='GDP per capita', y='Population density', color=kmeans.labels_,
+        hover_data=['Country Name', 'Region'],
+        width=800, height=600
+    )
+    fig.update(layout_coloraxis_showscale=False)
+    fig.show()
+
+        #гістограми через цикл
+    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+    labels = dataset2.columns[2:]
+    for i in range(len(labels)):
+        ax_i = (i // 3, i % 3)
+        axes[ax_i].set_title(labels[i])
+        axes[ax_i].grid('-')
+        axes[ax_i].hist(dataset2[labels[i]])
+    fig.delaxes(axes[1][2])
+    plt.show()
