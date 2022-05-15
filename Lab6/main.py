@@ -47,6 +47,11 @@ def stats_nan_data(data):
     missing = pd.concat([count, percent], axis=1, keys=['Count NaN', 'Percent NaN'])
     return missing
 
+    #перевірки наявності лінійної залежності між двома векторами:
+def are_correlating(a, b):
+    print(np.corrcoef(a, b))
+    return abs(np.corrcoef(a, b)[0, 1]) > 0.8
+
 
 if __name__ == '__main__':
 
@@ -201,3 +206,8 @@ if __name__ == '__main__':
         axes[ax_i].hist(dataset2[labels[i]])
     fig.delaxes(axes[1][2])
     plt.show()
+
+
+    x = np.random.randint(0, 50, 1000)
+    y = -x + np.random.normal(0, 10, 1000)
+    print(are_correlating(x, y))
