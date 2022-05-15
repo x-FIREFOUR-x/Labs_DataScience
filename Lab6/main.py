@@ -56,5 +56,20 @@ if __name__ == '__main__':
     print(missing_data.head(10))
     dataset = dataset.drop(columns=['Cabin'])
 
+    dataset_train, dataset_test = train_test_split(dataset, test_size=0.3, random_state=1)
+
+    dataset_train = dataset_train.fillna(dataset_train.mean())
+    dataset_test = dataset_test.fillna(dataset_test.mean())
+
+    dataset_train['Embarked'] = dataset_train['Embarked'].fillna(dataset_train['Embarked'].mode()[0])
+    dataset_test['Embarked'] = dataset_test['Embarked'].fillna(dataset_train['Embarked'].mode()[0])
+
+    dataset_train['Age'] = dataset_train['Age'].fillna(dataset_train['Age'].mode()[0])
+    dataset_test['Age'] = dataset_test['Age'].fillna(dataset_train['Age'].mode()[0])
+
+    missing_data = stats_nan_data(dataset_train)
+    print(missing_data.head(10))
+    missing_data = stats_nan_data(dataset_test)
+    print(missing_data.head(10))
 
 
