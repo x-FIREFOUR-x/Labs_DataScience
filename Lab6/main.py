@@ -125,3 +125,16 @@ if __name__ == '__main__':
     print('Bagging cvs:', bagging_scores.mean())
     bagging.fit(Xtrain, Ytrain)
     print('Bagging test:', bagging.score(Xtest, Ytest))
+
+
+
+    #Додаткове завдання
+    dataset2 = pd.read_csv('data/Data2.csv', sep=';', decimal=',', encoding='windows-1251')
+
+    dataset2 = dataset2.rename(columns={'Populatiion': 'Population'})
+    dataset2['GDP per capita'] = abs(dataset2['GDP per capita'])
+    dataset2['Area'] = abs(dataset2['Area'])
+
+    dataset2['Population density'] = dataset2['Population'] / dataset2['Area']
+
+    print(dataset2.info())
