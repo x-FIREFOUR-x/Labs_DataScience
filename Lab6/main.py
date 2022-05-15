@@ -141,14 +141,13 @@ if __name__ == '__main__':
     #Додаткове завдання
     dataset2 = pd.read_csv('data/Data2.csv', sep=';', decimal=',', encoding='windows-1251')
 
+    print(dataset2.info())
     dataset2 = dataset2.rename(columns={'Populatiion': 'Population'})
     dataset2['GDP per capita'] = abs(dataset2['GDP per capita'])
     dataset2['Area'] = abs(dataset2['Area'])
     dataset2 = dataset2.fillna(dataset2.mean())
 
     dataset2['Population density'] = dataset2['Population'] / dataset2['Area']
-
-    print(dataset2.info())
 
     features = dataset2[['GDP per capita', 'Population density']]
 
@@ -205,6 +204,9 @@ if __name__ == '__main__':
         axes[ax_i].grid('-')
         axes[ax_i].hist(dataset2[labels[i]])
     fig.delaxes(axes[1][2])
+    plt.show()
+
+    dataset2['Region'].value_counts().plot(kind='bar', figsize=(12, 10), grid=True)
     plt.show()
 
 
