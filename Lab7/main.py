@@ -15,36 +15,54 @@ if __name__ == '__main__':
 
     #Основне завдання 1
     data_path = 'data\\Covid.csv'
-    dataset = pd.read_csv(data_path, sep=',', encoding='cp1252', decimal='.')
+    covid_ds = pd.read_csv(data_path, sep=',', encoding='cp1252', decimal='.')
 
-    print(dataset.info())
-    print(dataset.head(2))
+    print(covid_ds.info())
+    print(covid_ds.head(2))
 
-    dataset = dataset.drop(columns=
+    covid_ds = covid_ds.drop(columns=
                            ['Continent', 'Latitude', 'Longitude', 'Average temperature per year',
                             'Hospital beds per 1000 people', 'Medical doctors per 1000 people',
                             'GDP/Capita', 'Population', 'Median age',
                             'Population aged 65 and over (%)', 'Daily tests', 'Deaths'
                             ])
-    print(dataset.info())
-    print(dataset.head(2))
+    print(covid_ds.info())
+    print(covid_ds.head(2))
 
-    print((dataset.groupby(['Entity']))['Entity'].head(1))
-    dataset = dataset[(dataset['Entity'] == 'Ukraine') | (dataset['Entity'] == 'Poland')]
-    print((dataset.groupby(['Entity']))['Entity'].head(1))
+    print((covid_ds.groupby(['Entity']))['Entity'].head(1))
+    covid_ds = covid_ds[(covid_ds['Entity'] == 'Ukraine') | (covid_ds['Entity'] == 'Poland')]
+    print((covid_ds.groupby(['Entity']))['Entity'].head(1))
 
-    print('negative values:\n', dataset[dataset['Cases'] < 0])
+    print('negative values:\n', covid_ds[covid_ds['Cases'] < 0])
 
-    print(dataset.head(5))
+    print(covid_ds.head(5))
 
-    dataset = pd.pivot_table(dataset, values=['Cases'], index=['Date'], columns=['Entity'])
-    print(dataset.info())
-    print(dataset['Cases']['Ukraine'].head(10))
+    covid_ds = pd.pivot_table(covid_ds, values=['Cases'], index=['Date'], columns=['Entity'])
+    print(covid_ds.info())
+    print(covid_ds['Cases']['Ukraine'].head(10))
 
 
     fig, ax = plt.subplots(figsize=(15, 10))
-    dataset['Cases'][['Ukraine', 'Poland']].plot(ax=ax)
+    covid_ds['Cases'][['Ukraine', 'Poland']].plot(ax=ax)
     plt.title('Часова динаміка Covid-19 в Україні та Польщі')
     ax.grid()
+    plt.show()
+
+
+    pl_covid_ds = covid_ds['Cases'][['Poland']]
+    pl_covid_ds.describe()
+
+    ukr_covid_ds = covid_ds['Cases'][['Ukraine']]
+    ukr_covid_ds.describe()
+
+    fig, ax = plt.subplots(1, 2, figsize=(20, 8))
+    ax[0].set_title('Ukraine')
+    ax[0].grid('-')
+    ax[0].hist(ukr_covid_ds)
+
+    ax[1].set_title('Poland')
+    ax[1].grid('-')
+    ax[1].hist(pl_covid_ds)
+
     plt.show()
 
