@@ -21,7 +21,7 @@ def plot_moving_average(series, n):
     plt.plot(rolling_mean, c='orange', label='Rolling mean trend')
     plt.plot(series[n:], label='Actual values')
     plt.legend(loc='upper left')
-    #plt.grid(True)
+    plt.grid(True)
     plt.show()
 
 
@@ -42,56 +42,56 @@ def dickey_fuller_test(series):
 if __name__ == '__main__':
 
     #Основне завдання 1
-    data_path = 'data\\Covid.csv'
-    covid_ds = pd.read_csv(data_path, sep=',', encoding='cp1252', decimal='.')
+    data_path = 'data\\DataCovid.csv'
+    covid_ds = pd.read_csv(data_path, index_col=['date'], parse_dates=['date'])
 
+    print(covid_ds.info())
+    print(covid_ds.head(10))
+
+
+    covid_ds = covid_ds[['country', 'daily_new_cases']]
     print(covid_ds.info())
     print(covid_ds.head(2))
 
-    covid_ds = covid_ds.drop(columns=
-                           ['Continent', 'Latitude', 'Longitude', 'Average temperature per year',
-                            'Hospital beds per 1000 people', 'Medical doctors per 1000 people',
-                            'GDP/Capita', 'Population', 'Median age',
-                            'Population aged 65 and over (%)', 'Daily tests', 'Deaths'
-                            ])
-    print(covid_ds.info())
-    print(covid_ds.head(2))
 
-    print((covid_ds.groupby(['Entity']))['Entity'].head(1))
-    covid_ds = covid_ds[(covid_ds['Entity'] == 'Ukraine') | (covid_ds['Entity'] == 'Poland')]
-    print((covid_ds.groupby(['Entity']))['Entity'].head(1))
+    covid_ds = covid_ds.rename(columns={'country': 'Country','daily_new_cases': 'New cases'})
 
-    print('negative values:\n', covid_ds[covid_ds['Cases'] < 0])
+
+    print((covid_ds.groupby(['Country']))['Country'].head(1))
+    covid_ds = covid_ds[(covid_ds['Country'] == 'Ukraine') | (covid_ds['Country'] == 'Romania')]
+    print((covid_ds.groupby(['Country']))['Country'].head(1))
+
+    print('negative values:\n', covid_ds[covid_ds['New cases'] < 0])
+
 
     print(covid_ds.head(5))
 
-    covid_ds = pd.pivot_table(covid_ds, values=['Cases'], index=['Date'], columns=['Entity'])
+    covid_ds = covid_ds.pivot_table(values=['New cases'], index=['date'], columns=['Country'])
     print(covid_ds.info())
-    print(covid_ds['Cases']['Ukraine'].head(10))
+    print(covid_ds['New cases'].head(10))
 
 
     fig, ax = plt.subplots(figsize=(15, 10))
-    covid_ds['Cases'][['Ukraine', 'Poland']].plot(ax=ax)
-    plt.title('Часова динаміка Covid-19 в Україні та Польщі')
+    covid_ds['New cases'][['Ukraine', 'Romania']].plot(ax=ax)
+    plt.title('Часова динаміка Covid-19 в Україні та Румунії')
     ax.grid()
     plt.show()
 
 
-    ukr_covid_ds = covid_ds['Cases'][['Ukraine']]
+    ukr_covid_ds = covid_ds['New cases']['Ukraine']
     ukr_covid_ds.describe()
 
-    pl_covid_ds = covid_ds['Cases'][['Poland']]
-    pl_covid_ds.describe()
+    rom_covid_ds = covid_ds['New cases']['Romania']
+    rom_covid_ds.describe()
+
 
     fig, ax = plt.subplots(1, 2, figsize=(20, 8))
     ax[0].set_title('Ukraine')
     ax[0].grid('-')
     ax[0].hist(ukr_covid_ds)
-
-    ax[1].set_title('Poland')
+    ax[1].set_title('Romania')
     ax[1].grid('-')
-    ax[1].hist(pl_covid_ds)
-
+    ax[1].hist(rom_covid_ds)
     plt.show()
 
 
@@ -99,16 +99,21 @@ if __name__ == '__main__':
     plot_moving_average(ukr_covid_ds, 10)
     plot_moving_average(ukr_covid_ds, 20)
 
-    plot_moving_average(pl_covid_ds, 5)
-    plot_moving_average(pl_covid_ds, 10)
-    plot_moving_average(pl_covid_ds, 20)
+    plot_moving_average(rom_covid_ds, 5)
+    plot_moving_average(rom_covid_ds, 10)
+    plot_moving_average(rom_covid_ds, 20)
 
-    '''
+
     decomposition = smt.seasonal_decompose(ukr_covid_ds[~ukr_covid_ds.isna()])
     fig = decomposition.plot()
     fig.set_size_inches(15, 10)
     plt.show()
-    '''
+
+    decomposition = smt.seasonal_decompose(rom_covid_ds[~rom_covid_ds.isna()])
+    fig = decomposition.plot()
+    fig.set_size_inches(15, 10)
+    plt.show()
+
 
     fig, ax = plt.subplots(2, figsize=(15, 10))
     fig.suptitle('Ukraine: ', fontsize=20)
@@ -117,12 +122,14 @@ if __name__ == '__main__':
     plt.show()
 
     fig, ax = plt.subplots(2, figsize=(15, 10))
-    fig.suptitle('Poland', fontsize=20)
-    ax[0] = plot_acf(pl_covid_ds[~pl_covid_ds.isna()], ax=ax[0], lags=120)
-    ax[1] = plot_pacf(pl_covid_ds[~pl_covid_ds.isna()], ax=ax[1], lags=120)
+    fig.suptitle('Romania', fontsize=20)
+    ax[0] = plot_acf(rom_covid_ds[~rom_covid_ds.isna()], ax=ax[0], lags=120)
+    ax[1] = plot_pacf(rom_covid_ds[~rom_covid_ds.isna()], ax=ax[1], lags=120)
     plt.show()
 
     dickey_fuller_test(ukr_covid_ds[~ukr_covid_ds.isna()])
-    #dickey_fuller_test(pl_covid_ds[~pl_covid_ds.isna()])
+    dickey_fuller_test(rom_covid_ds[~rom_covid_ds.isna()])
+
+
 
 
