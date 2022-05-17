@@ -38,7 +38,6 @@ def dickey_fuller_test(series):
 
 
 
-
 if __name__ == '__main__':
 
     #Основне завдання 1
@@ -133,3 +132,53 @@ if __name__ == '__main__':
 
 
 
+    # Основне завдання 2
+    data_path = 'data\\USD_UAH.csv'
+    currencies_ds = pd.read_csv(data_path, index_col=['Date'], parse_dates=['Date'])
+
+    currencies_ds = currencies_ds.sort_index(ascending=True)
+
+    print(currencies_ds.info())
+    print(currencies_ds.head(10))
+
+
+    idx = pd.date_range(currencies_ds.index[0], currencies_ds.index[-1])
+    currencies_ds = currencies_ds.reindex(idx)
+    print(currencies_ds.head(10))
+
+    for index in currencies_ds.index:
+        if pd.isna(currencies_ds.loc[index, 'Price']):
+            currencies_ds.loc[index] = currencies_ds.shift().loc[index]
+
+    print(currencies_ds.head(10))
+
+
+    print('negative values:\n', currencies_ds[currencies_ds['Price'] < 0])
+    print('negative values:\n', currencies_ds[currencies_ds['High'] < 0])
+    print('negative values:\n', currencies_ds[currencies_ds['Low'] < 0])
+
+
+    fig, ax = plt.subplots(figsize=(15, 12))
+    currencies_ds[['Price']].plot(ax=ax, subplots=True)
+    ax.grid(True)
+    plt.show()
+
+
+    plot_moving_average(currencies_ds['Price'], 10)
+    plot_moving_average(currencies_ds['Price'], 20)
+    plot_moving_average(currencies_ds['Price'], 30)
+
+
+    price_decomposition = smt.seasonal_decompose(currencies_ds['Price'])
+    fig = price_decomposition.plot()
+    fig.set_size_inches(15, 10)
+    plt.show()
+
+
+    fig, ax = plt.subplots(2, figsize=(15, 10))
+    ax[0] = plot_acf(currencies_ds['Price'], ax=ax[0], lags=100)
+    ax[1] = plot_pacf(currencies_ds['Price'], ax=ax[1], lags=100)
+    plt.show()
+
+
+    dickey_fuller_test(currencies_ds['Price'])
