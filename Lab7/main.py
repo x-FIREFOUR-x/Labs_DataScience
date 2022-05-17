@@ -1,10 +1,14 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 import statsmodels.api as sm
 import statsmodels.tsa.api as smt
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+
+
+
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -39,7 +43,7 @@ def dickey_fuller_test(series):
 
 
 if __name__ == '__main__':
-
+    
     #Основне завдання 1
     data_path = 'data\\DataCovid.csv'
     covid_ds = pd.read_csv(data_path, index_col=['date'], parse_dates=['date'])
@@ -182,3 +186,72 @@ if __name__ == '__main__':
 
 
     dickey_fuller_test(currencies_ds['Price'])
+
+
+
+
+    #Додаткове завдання
+    weather_ds = pd.read_csv('data/seattleWeather_1948-2017.csv', index_col=['DATE'], parse_dates=['DATE'])
+
+    print(weather_ds.info())
+    print(weather_ds.head(10))
+
+    print('nan values:\n', weather_ds[weather_ds['PRCP'].isna()])
+    print('nan values:\n', weather_ds[weather_ds['TMAX'].isna()])
+    print('nan values:\n', weather_ds[weather_ds['TMIN'].isna()])
+    print('nan values:\n', weather_ds[weather_ds['RAIN'].isna()])
+
+    weather_ds['PRCP'].fillna(0, inplace=True)
+    weather_ds['RAIN'].fillna(False, inplace=True)
+
+
+    fig, ax = plt.subplots(figsize=(15, 12))
+    weather_ds[['PRCP', 'TMAX', 'TMIN']].plot(ax=ax, subplots=True)
+    ax.grid(True)
+    plt.show()
+
+    fig, ax = plt.subplots(figsize=(15, 12))
+    weather_ds[['PRCP', 'TMAX', 'TMIN']].loc[weather_ds.index[-1500:]].plot(ax=ax, subplots=True)
+    ax.grid(True)
+    plt.show()
+
+    fig, ax = plt.subplots(figsize=(15, 12))
+    weather_ds[['PRCP', 'TMAX', 'TMIN']].loc[weather_ds.index[-1500:]].resample('W').mean().plot(ax=ax, subplots=True)
+    ax.grid(True)
+    plt.show()
+
+    prcp_decomposition = smt.seasonal_decompose(weather_ds['PRCP'].loc[weather_ds.index[-1500:]].resample('W').mean())
+    fig = prcp_decomposition.plot()
+    fig.set_size_inches(15, 10)
+    plt.show()
+
+    fig, ax = plt.subplots(2, figsize=(15, 10))
+    ax[0] = plot_acf(weather_ds['PRCP'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[0], lags=100)
+    ax[1] = plot_pacf(weather_ds['PRCP'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[1], lags=100)
+    plt.show()
+
+        #Конвертація фарангейта в градуси
+    print(weather_ds.head(10))
+    weather_ds['TMAX'] = (5 / 9) * (weather_ds['TMAX'] - 32)
+    weather_ds['TMIN'] = (5 / 9) * (weather_ds['TMIN'] - 32)
+    weather_ds[['TMIN', 'TMAX']].describe()
+    print(weather_ds.head(10))
+
+        #будуємо матрицю кореляції
+    corr = weather_ds[['PRCP', 'TMAX', 'TMIN']].corr()
+    print(corr)
+
+    dickey_fuller_test(weather_ds['PRCP'].loc['2007-01-01':])
+
+        #будуємо модель ARIMA для передбачення опадів на настпний рік
+    train_data = weather_ds['PRCP'].loc['2007-01-01':]
+    train_data.describe()
+    print(train_data.head(10))
+
+    model = smt.ARIMA(train_data, order=(3, 0, 1)).fit()
+    model.summary()
+
+    fig, ax = plt.subplots(figsize=(15, 10))
+    train_data.loc[train_data.index[-300:]].plot(ax=ax)
+    ax.vlines(train_data.index[-1], 0, 1.5, linestyle='--', color='r', label='Start of forecast')
+    ax = model.plot_predict(train_data.index[-1], '2018-12-31', dynamic=True, plot_insample=False, ax=ax)
