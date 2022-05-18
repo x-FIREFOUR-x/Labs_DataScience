@@ -83,9 +83,11 @@ if __name__ == '__main__':
 
     ukr_covid_ds = covid_ds['New cases']['Ukraine']
     ukr_covid_ds.describe()
+    print(ukr_covid_ds.describe())
 
     rom_covid_ds = covid_ds['New cases']['Romania']
     rom_covid_ds.describe()
+    print(rom_covid_ds.describe())
 
 
     fig, ax = plt.subplots(1, 2, figsize=(20, 8))
@@ -158,6 +160,7 @@ if __name__ == '__main__':
 
 
     print('negative values:\n', currencies_ds[currencies_ds['Price'] < 0])
+    print('negative values:\n', currencies_ds[currencies_ds['Open'] < 0])
     print('negative values:\n', currencies_ds[currencies_ds['High'] < 0])
     print('negative values:\n', currencies_ds[currencies_ds['Low'] < 0])
 
@@ -224,10 +227,26 @@ if __name__ == '__main__':
     fig = prcp_decomposition.plot()
     fig.set_size_inches(15, 10)
     plt.show()
+    prcp_decomposition = smt.seasonal_decompose(weather_ds['TMAX'].loc[weather_ds.index[-1500:]].resample('W').mean())
+    fig = prcp_decomposition.plot()
+    fig.set_size_inches(15, 10)
+    plt.show()
+    prcp_decomposition = smt.seasonal_decompose(weather_ds['TMIN'].loc[weather_ds.index[-1500:]].resample('W').mean())
+    fig = prcp_decomposition.plot()
+    fig.set_size_inches(15, 10)
+    plt.show()
 
     fig, ax = plt.subplots(2, figsize=(15, 10))
     ax[0] = plot_acf(weather_ds['PRCP'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[0], lags=100)
     ax[1] = plot_pacf(weather_ds['PRCP'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[1], lags=100)
+    plt.show()
+    fig, ax = plt.subplots(2, figsize=(15, 10))
+    ax[0] = plot_acf(weather_ds['TMAX'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[0], lags=100)
+    ax[1] = plot_pacf(weather_ds['TMAX'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[1], lags=100)
+    plt.show()
+    fig, ax = plt.subplots(2, figsize=(15, 10))
+    ax[0] = plot_acf(weather_ds['TMIN'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[0], lags=100)
+    ax[1] = plot_pacf(weather_ds['TMIN'].loc[weather_ds.index[-1500:]].resample('W').mean(), ax=ax[1], lags=100)
     plt.show()
 
         #Конвертація фарангейта в градуси
