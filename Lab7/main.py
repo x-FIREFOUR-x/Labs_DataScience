@@ -43,7 +43,7 @@ def dickey_fuller_test(series):
 
 
 if __name__ == '__main__':
-    
+
     #Основне завдання 1
     data_path = 'data\\DataCovid.csv'
     covid_ds = pd.read_csv(data_path, index_col=['date'], parse_dates=['date'])
@@ -263,14 +263,19 @@ if __name__ == '__main__':
     dickey_fuller_test(weather_ds['PRCP'].loc['2007-01-01':])
 
         #будуємо модель ARIMA для передбачення опадів на настпний рік
-    train_data = weather_ds['PRCP'].loc['2007-01-01':]
+    train_data = weather_ds['PRCP'].loc['2010-01-01':]
     train_data.describe()
-    print(train_data.head(10))
+    print(train_data.describe().head(10))
+    print(train_data.head())
 
     model = smt.ARIMA(train_data, order=(3, 0, 1)).fit()
     model.summary()
+    print(model.summary())
 
     fig, ax = plt.subplots(figsize=(15, 10))
-    train_data.loc[train_data.index[-300:]].plot(ax=ax)
-    ax.vlines(train_data.index[-1], 0, 1.5, linestyle='--', color='r', label='Start of forecast')
-    ax = model.plot_predict(train_data.index[-1], '2018-12-31', dynamic=True, plot_insample=False, ax=ax)
+    fig.suptitle('Прогноз опадів на 2018 рік', fontsize=16)
+    ax = train_data.loc[train_data.index[-300:]].plot()
+    ax.vlines(train_data.index[-1], 0, 1.5, linestyle='--', color='r')
+    ax = model.predict(train_data.index[-1], '2018-12-31', dynamic=True, plot_insample=False, ax=ax).plot()
+    plt.show()
+
