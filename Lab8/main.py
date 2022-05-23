@@ -1,16 +1,18 @@
-# This is a sample Python script.
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+#pd.set_option('display.max_colwidth', None)
+desired_width = 1500
+pd.set_option('display.width', desired_width)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    data_path = 'data/ukr_text.csv'
+    dataset = pd.read_csv(data_path, sep=',', encoding='utf-8')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    print(dataset.info())
+    print(dataset.head())
