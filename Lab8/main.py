@@ -61,6 +61,24 @@ def tokenize_del_stop_worlds(dataset):
     return dataset
 
 
+def lematization(dataset, morph):
+    for index in range(dataset.index[0], dataset.index[-1]):
+
+        text = dataset.loc[index]['Title']
+        lem_words = []
+        for word in text:
+            lem_word = morph.parse(word)[-1].normal_form
+            lem_words.append(lem_word)
+        dataset.loc[index]['Title'] = lem_words
+
+        text = dataset.loc[index]['Body']
+        lem_words = []
+        for word in text:
+            lem_word = morph.parse(word)[-1].normal_form
+            lem_words.append(lem_word)
+        dataset.loc[index]['Body'] = lem_words
+
+    return dataset
 
 
 if __name__ == '__main__':
@@ -70,9 +88,13 @@ if __name__ == '__main__':
     print(dataset.info())
     print(dataset.head())
 
-
-        #1. очистка 2. токенізація
+        #1 очистка, 2 токенізація
     clean_data(dataset)
     print(dataset.head())
     tokenize_del_stop_worlds(dataset)
+    print(dataset.head())
+
+        # 3 лематизація
+    morph = pymorphy2.MorphAnalyzer(lang='uk')
+    lematization(dataset, morph)
     print(dataset.head())
