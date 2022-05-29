@@ -1,13 +1,20 @@
+import operator
+
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
 from nltk.tokenize import RegexpTokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from pymorphy2 import MorphAnalyzer
+import math
+
 import pymorphy2
 import re
 import csv
 import io
+
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -17,6 +24,7 @@ pd.set_option('display.width', desired_width)
 
 
 
+    #очистити дані від тегів символів розмітки і перевести в нижній регістер
 def clean_data(dataset):
     for index in range(dataset.index[0], dataset.index[-1]):
         dataset.loc[index]['Title'] = re.sub(r"<[^>]+>", "", dataset.loc[index]['Title'])
@@ -31,6 +39,7 @@ def clean_data(dataset):
     return dataset
 
 
+    #отримати масив стоп слів
 def get_stop_words():
     stopwords = []
     filename = 'data/stop_words_ua.csv'
@@ -45,6 +54,7 @@ def get_abbreviation(language):
         return ['тис', 'грн', 'т.я', 'вул', 'cек', 'хв', 'обл', 'кв', 'пл', 'напр', 'гл', 'і.о', 'зам']
 
 
+    #токенізація розбиття тестів на токени
 def tokenize_del_stop_worlds(dataset):
     nltk.download('punkt')
     stop_words = get_stop_words()
@@ -61,6 +71,7 @@ def tokenize_del_stop_worlds(dataset):
     return dataset
 
 
+    #лематизація (зведення слів до нормальної форми)
 def lematization(dataset, morph):
     for index in range(dataset.index[0], dataset.index[-1]):
 
@@ -81,6 +92,47 @@ def lematization(dataset, morph):
     return dataset
 
 
+def tfidf(text):
+    tfidf = TfidfVectorizer().fit_transform(text)
+    a = tfidf.toarray()
+    return a
+
+
+    #створити масив словників(один словник для одного корпусу)відповідаючих текстам в датафреймі
+def dictionerys(dataset, column):
+    arr_dictionary = []
+    for index in range(dataset.index[0], dataset.index[-1]):
+        diction = dictionary(dataset.loc[index][column])
+        arr_dictionary.append(diction)
+    return arr_dictionary
+
+
+    #створити словник для тексту(одного корпусу)
+def dictionary(text):
+    dictionary = {}
+    for word in text:
+       if word in dictionary.keys():
+           dictionary[word] += 1
+       else:
+           dictionary[word] = 1
+
+    return dict(sorted(dictionary.items(), reverse=True, key=lambda x: x[1]))
+
+
+def total_dictionary(dataset, column):
+    total_dict = {}
+    for index in range(dataset.index[0], dataset.index[-1]):
+        for word in dataset.loc[index][column]:
+            if word in total_dict.keys():
+                total_dict[word] += 1
+            else:
+                total_dict[word] = 1
+
+    return dict(sorted(total_dict.items(), reverse=True, key=lambda x: x[1]))
+    #return total_dict
+
+
+
 if __name__ == '__main__':
     data_path = 'data/ukr_text.csv'
     dataset = pd.read_csv(data_path, sep=',', encoding='utf-8')
@@ -98,3 +150,15 @@ if __name__ == '__main__':
     morph = pymorphy2.MorphAnalyzer(lang='uk')
     lematization(dataset, morph)
     print(dataset.head())
+
+    #tfidf = TfidfVectorizer().fit_transform(text)
+    #print(tfidf)
+    #print(tfidf.toarray())
+
+
+    dictionarys = dictionerys(dataset, 'Body')
+    total_dict = total_dictionary(dataset, 'Body')
+
+    print(dictionarys[0])
+    print()
+    print(total_dict)
