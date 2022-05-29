@@ -9,6 +9,7 @@ from nltk.tokenize import RegexpTokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from pymorphy2 import MorphAnalyzer
 import math
+import numpy as np
 
 import pymorphy2
 import re
@@ -190,6 +191,24 @@ def tf_idf(total_dict, dictionarys, dataset , number):
     return tf_idf
 
 
+    #мішок слів
+def bag_of_word(total_diction, dictionarys):
+    bag_word = pd.DataFrame(0, index=np.arange(len(dictionarys)), columns=total_diction.keys())
+
+    for i in range(0, len(total_diction)):
+        arr = []
+        word_key = list(total_dict.keys())[i]
+
+        for j in range(0, len(dictionarys)):
+            if word_key in dictionarys[j].keys():
+                arr.append(dictionarys[j][word_key])
+            else:
+                arr.append(0)
+
+        bag_word[word_key] = arr
+
+    return bag_word
+
 
 
 
@@ -218,3 +237,6 @@ if __name__ == '__main__':
     tf_idf = tf_idf(total_dict, dictionarys, dataset, 10)
     print(tf_idf.head(50))
 
+        #5 Bag of Word
+    bag_word = bag_of_word(total_dict, dictionarys)
+    print(bag_word.head(2))
