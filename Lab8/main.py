@@ -56,7 +56,7 @@ def get_abbreviation(language):
 
     #токенізація розбиття тестів на токени
 def tokenize_del_stop_worlds(dataset):
-    nltk.download('punkt')
+    #nltk.download('punkt')
     stop_words = get_stop_words()
 
     for index in range(dataset.index[0], dataset.index[-1]):
@@ -78,7 +78,7 @@ def lematization(dataset, morph):
         text = dataset.loc[index]['Title']
         lem_words = []
         for word in text:
-            lem_word = morph.parse(word)[-1].normal_form
+            lem_word = morph.parse(word)[0].normal_form
             lem_words.append(lem_word)
         dataset.loc[index]['Title'] = lem_words
 
@@ -119,6 +119,7 @@ def dictionary(text):
     return dict(sorted(dictionary.items(), reverse=True, key=lambda x: x[1]))
 
 
+    #створити загальний словник (кількість в всіх корпусах)
 def total_dictionary(dataset, column):
     total_dict = {}
     for index in range(dataset.index[0], dataset.index[-1]):
@@ -130,6 +131,47 @@ def total_dictionary(dataset, column):
 
     return dict(sorted(total_dict.items(), reverse=True, key=lambda x: x[1]))
     #return total_dict
+
+
+    #обрахувати tf для number слів в корпусі, для кожного тексту
+def tf(total_dict, dictionarys, dataset , number):
+    _tf = []
+    for i in range(0, number):
+        arr_tf = []
+        word_key = list(total_dict.keys())[i]
+
+        for index in range(dataset.index[0], dataset.index[-1]):
+            if word_key in dictionarys[index].keys():
+                number_word = dictionarys[index][word_key]
+                number_all_words = len(dataset['Body'].loc[index])
+                tf = number_word / number_all_words
+            else:
+                tf = 0
+            arr_tf.append(tf)
+
+        _tf.append(arr_tf)
+
+    return _tf
+
+
+    #обрахувати idf для number слів в корпусі
+def idf(total_dict, dictionarys, number):
+    arr_idf = []
+    number_sentenses = len(dictionarys)
+
+    for i in range(0, number):
+        number_sentenses_contain_world = 0
+        word_key = list(total_dict.keys())[i]
+
+        for index in range(0, number_sentenses):
+            if word_key in dictionarys[index].keys():
+                number_sentenses_contain_world += 1
+
+        idf = number_sentenses / number_sentenses_contain_world
+        arr_idf.append(idf)
+
+    return arr_idf
+
 
 
 
@@ -156,9 +198,18 @@ if __name__ == '__main__':
     #print(tfidf.toarray())
 
 
+
     dictionarys = dictionerys(dataset, 'Body')
     total_dict = total_dictionary(dataset, 'Body')
 
     print(dictionarys[0])
     print()
     print(total_dict)
+
+    tf = tf(total_dict, dictionarys, dataset, 10)
+    print(tf)
+    print(len(tf))
+
+    idf = idf(total_dict, dictionarys, 10)
+    print(idf)
+    print(len(idf))
