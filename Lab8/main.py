@@ -30,8 +30,8 @@ def clean_data(dataset):
         dataset.loc[index]['Title'] = re.sub(r"<[^>]+>", "", dataset.loc[index]['Title'])
         dataset.loc[index]['Body'] = re.sub(r"<[^>]+>", "", dataset.loc[index]['Body'])
 
-        dataset.loc[index]['Title'] = re.sub('[^A-Za-z0-9А-Яа-яҐґЄєІіЇї\']+', " ", dataset.loc[index]['Title'])
-        dataset.loc[index]['Body'] = re.sub('[^A-Za-z0-9А-Яа-яҐґЄєІіЇї\']+', " ", dataset.loc[index]['Body'])
+        dataset.loc[index]['Title'] = re.sub('[^A-Za-zА-Яа-яҐґЄєІіЇї\']+', " ", dataset.loc[index]['Title'])
+        dataset.loc[index]['Body'] = re.sub('[^A-Za-zА-Яа-яҐґЄєІіЇї\']+', " ", dataset.loc[index]['Body'])
 
         dataset.loc[index]['Title'] = dataset.loc[index]['Title'].lower()
         dataset.loc[index]['Body'] = dataset.loc[index]['Body'].lower()
@@ -90,12 +90,6 @@ def lematization(dataset, morph):
         dataset.loc[index]['Body'] = lem_words
 
     return dataset
-
-
-def tfidf(text):
-    tfidf = TfidfVectorizer().fit_transform(text)
-    a = tfidf.toarray()
-    return a
 
 
     #створити масив словників(один словник для одного корпусу)відповідаючих текстам в датафреймі
@@ -173,6 +167,30 @@ def idf(total_dict, dictionarys, number):
     return arr_idf
 
 
+    #обрахувати tf_idf для number слів в корпусі
+def tf_idf(total_dict, dictionarys, dataset , number):
+    tf_ = tf(total_dict, dictionarys, dataset, number)
+    idf_ = idf(total_dict, dictionarys, number)
+
+    tf_idf = []
+    for index in range(0, len(tf_)):
+        arr = []
+        val_idf = idf_[index]
+
+        for val_tf in tf_[index]:
+            val_tf_idf = val_tf * val_idf
+            arr.append(val_tf_idf)
+
+        tf_idf.append(arr)
+
+    tf_idf = pd.DataFrame(tf_idf).T
+    for i in tf_idf.columns:
+        tf_idf = tf_idf.rename(columns={i: list(total_dict.keys())[i]})
+
+    return tf_idf
+
+
+
 
 
 if __name__ == '__main__':
@@ -193,23 +211,10 @@ if __name__ == '__main__':
     lematization(dataset, morph)
     print(dataset.head())
 
-    #tfidf = TfidfVectorizer().fit_transform(text)
-    #print(tfidf)
-    #print(tfidf.toarray())
-
-
-
+        # 4 TF-IDF
     dictionarys = dictionerys(dataset, 'Body')
     total_dict = total_dictionary(dataset, 'Body')
 
-    print(dictionarys[0])
-    print()
-    print(total_dict)
+    tf_idf = tf_idf(total_dict, dictionarys, dataset, 10)
+    print(tf_idf.head(50))
 
-    tf = tf(total_dict, dictionarys, dataset, 10)
-    print(tf)
-    print(len(tf))
-
-    idf = idf(total_dict, dictionarys, 10)
-    print(idf)
-    print(len(idf))
