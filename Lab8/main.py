@@ -1,14 +1,5 @@
-import operator
-
 import pandas as pd
 import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
-from nltk.tokenize import RegexpTokenizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from pymorphy2 import MorphAnalyzer
-import math
 import numpy as np
 
 import pymorphy2
@@ -125,7 +116,6 @@ def total_dictionary(dataset, column):
                 total_dict[word] = 1
 
     return dict(sorted(total_dict.items(), reverse=True, key=lambda x: x[1]))
-    #return total_dict
 
 
     #обрахувати tf для number слів в корпусі, для кожного тексту
