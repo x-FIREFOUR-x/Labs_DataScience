@@ -1,1 +1,1 @@
-# Labs Data Since (Data analysis in information systems)
+# Labs Data Science (Data analysis in information systems)
