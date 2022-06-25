@@ -230,3 +230,6 @@ if __name__ == '__main__':
         #5 Bag of Word
     bag_word = bag_of_word(total_dict, dictionarys)
     print(bag_word.head(2))
+
+
+        #add task(sentiment analysis)
