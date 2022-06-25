@@ -200,9 +200,31 @@ def bag_of_word(total_diction, dictionarys):
     return bag_word
 
 
+    #отримати емоційне забарвлення тексту
+def get_sentiment_for_text(text, dictionary):
+    sentiment = 0
+    for word in text:
+        if word in dictionary:
+            sentiment = sentiment + dictionary[word]
+
+    if sentiment >= 0:
+        return 'positive'
+    else:
+        return 'negative'
+
+
+    #отримати емоційні забарвлення всіх текстів датафрейму
+def sentiment_analysis(df, dictionary):
+    sentiments = []
+    for i in df['Body']:
+        sentiment = get_sentiment_for_text(i, dictionary)
+        sentiments.append(sentiment)
+
+    return pd.DataFrame({'Text': df['Body'], 'Sentiment': sentiments})
 
 
 if __name__ == '__main__':
+
     data_path = 'data/ukr_text.csv'
     dataset = pd.read_csv(data_path, sep=',', encoding='utf-8')
 
@@ -212,13 +234,16 @@ if __name__ == '__main__':
         #1 очистка, 2 токенізація
     clean_data(dataset)
     print(dataset.head())
+
     tokenize_del_stop_worlds(dataset)
     print(dataset.head())
 
+    
         # 3 лематизація
     morph = pymorphy2.MorphAnalyzer(lang='uk')
     lematization(dataset, morph)
     print(dataset.head())
+
 
         # 4 TF-IDF
     dictionarys = dictionerys(dataset, 'Body')
@@ -233,3 +258,9 @@ if __name__ == '__main__':
 
 
         #add task(sentiment analysis)
+    dictionary_path = 'data/tone-dict-uk.tsv'
+    tone_dictionary_df = pd.read_csv(dictionary_path, sep ='\t', names=['Word', 'Tone'])
+    print(tone_dictionary_df.head())
+
+    df_sentiment = sentiment_analysis(dataset, tone_dictionary_df)
+    print(df_sentiment.head())
